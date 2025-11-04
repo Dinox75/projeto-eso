@@ -7,9 +7,9 @@ Este projeto foi desenvolvido para o processo seletivo da ESO (Poços de Caldas)
 - Podem comprar itens cosméticos com esses créditos
 - Possuem um inventário para armazenar as compras
 - Podem devolver itens e recuperar créditos
-- Todos os dados são armazenados em banco relacional (MySQL)
+- Todos os dados são armazenados em um banco relacional (MySQL)
 
-A aplicação foi construída com Python, Flask, SQLAlchemy e MySQL.
+A aplicação foi construída com **Python, Flask, SQLAlchemy e MySQL**.
 
 ---
 
@@ -28,49 +28,45 @@ A aplicação foi construída com Python, Flask, SQLAlchemy e MySQL.
 
 ```bash
 git clone <URL_DO_SEU_REPOSITORIO>
-cd Projeto-ESO
+cd projeto-eso
 ```
 
-🏗️ 2) Criar e ativar ambiente virtual
+### 🏗️ 2) Criar e ativar ambiente virtual
 
-Criar o venv:
 ```bash
 python -m venv .venv
 ```
 
-Ativar (Windows PowerShell):
-```powershell
+**Windows PowerShell:**
+
+```bash
 .\.venv\Scripts\Activate.ps1
 ```
 
-Ativar (Windows CMD):
-```cmd
+**Windows CMD:**
+
+```bash
 .\.venv\Scripts\activate.bat
 ```
 
-Ativar (Linux / macOS):
+**Linux / macOS:**
+
 ```bash
 source .venv/bin/activate
 ```
 
-📦 3) Instalar dependências
+### 📦 3) Instalar dependências
 
 ```bash
 pip install -r backend/requirements.txt
 ```
 
-🗄️ 4) Configurar banco de dados MySQL
-
-No MySQL Workbench (ou outro cliente), crie o banco e as tabelas:
+### 🗄️ 4) Configurar banco de dados MySQL
 
 ```sql
 CREATE DATABASE IF NOT EXISTS eso_projeto;
 USE eso_projeto;
-```
 
-Criar tabelas:
-
-```sql
 CREATE TABLE IF NOT EXISTS usuarios (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nome VARCHAR(100) NOT NULL,
@@ -91,7 +87,7 @@ CREATE TABLE IF NOT EXISTS cosmeticos (
     data_criado DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE IF NOT EXISTS inventario (
+CREATE TABLE IF NOT EXISTS inventarios (
     id INT AUTO_INCREMENT PRIMARY KEY,
     usuario_id INT NOT NULL,
     cosmetico_id INT NOT NULL,
@@ -99,11 +95,7 @@ CREATE TABLE IF NOT EXISTS inventario (
     FOREIGN KEY (usuario_id) REFERENCES usuarios(id),
     FOREIGN KEY (cosmetico_id) REFERENCES cosmeticos(id)
 );
-```
 
-Inserir itens da loja:
-
-```sql
 INSERT INTO cosmeticos (nome, descricao, preco, tipo) VALUES
 ('Capacete Azul ESO', 'Capacete de segurança padrão técnico ESO', 300, 'capacete'),
 ('Colete de Campo ESO', 'Colete oficial de técnicos de manutenção', 500, 'roupa'),
@@ -113,42 +105,87 @@ INSERT INTO cosmeticos (nome, descricao, preco, tipo) VALUES
 ('Uniforme Azul ESO', 'Uniforme completo com logo ESO', 800, 'roupa');
 ```
 
-🔧 5) Ajustar conexão MySQL no código
+### 🔧 5) Configurar conexão MySQL
 
-No arquivo `backend/models.py` (ou onde a aplicação configura o SQLAlchemy), atualize a URI:
+No arquivo `backend/models.py`:
 
 ```python
 app.config['SQLALCHEMY_DATABASE_URI'] = "mysql+mysqlconnector://root:SUA_SENHA@localhost:3306/eso_projeto"
 ```
+Substitua `SUA_SENHA` pela sua senha do MySQL.
 
-Troque `SUA_SENHA` pela senha do seu MySQL. Se o usuário ou host forem diferentes, ajuste conforme necessário.
-
-▶️ 6) Rodar a aplicação
+### ▶️ 6) Executar aplicação
 
 ```bash
 cd backend
 python app.py
 ```
-
-A aplicação estará disponível em:
+A API estará disponível em:
 http://127.0.0.1:5000
 
----
+## 📡 API Endpoints
 
-## 📚 Sobre o Desenvolvimento e Aprendizado
+### Autenticação
 
-Este projeto foi desenvolvido como parte do processo seletivo da ESO para vaga de estágio e também como exercício prático para consolidar conhecimentos em:
+| Método | Endpoint         | Descrição         |
+|--------|------------------|-------------------|
+| GET    | /                | Healthcheck       |
+| POST   | /register        | Criar usuário     |
+| POST   | /login           | Login             |
 
-- Python e Flask
-- APIs REST
-- Banco de Dados MySQL
-- ORM com SQLAlchemy
-- Boas práticas de desenvolvimento
-- Estruturação de um projeto real do zero
+### Loja
 
-Durante o desenvolvimento utilizei documentação, fóruns, vídeos e materiais técnicos, além do apoio do ChatGPT (OpenAI) como ferramenta de suporte e apoi educacional. A IA foi usada como mentoria e apoio ao estudo — para esclarecer conceitos, ajudar a estruturar tarefas, revisar lógicas e identificar erros — mas cada parte do sistema foi implementada manualmente por mim, linha a linha.
+| Método | Endpoint               | Descrição               |
+|--------|------------------------|-------------------------|
+| GET    | /loja/listar          | Listar itens disponíveis|
+| POST   | /loja/comprar         | Comprar item            |
+| POST   | /loja/devolver        | Devolver item           |
+| GET    | /inventario/<id>      | Ver inventário do usuário|
 
-Meu objetivo foi aprender de verdade, construir algo funcional com responsabilidade e ética, e demonstrar capacidade de evolução e aplicação de novos conhecimentos.
+## 📚 Sobre o Desenvolvimento
 
----
+Este projeto demonstra competências em:
 
+- Desenvolvimento Backend com Python/Flask
+- APIs RESTful
+- Banco de Dados Relacionais (MySQL)
+- ORM (SQLAlchemy)
+- Boas práticas e Clean Code
+- Versionamento com Git
+
+## 📘 Aprendizado e Uso de IA
+
+Durante o desenvolvimento, utilizei o ChatGPT (OpenAI) como ferramenta de apoio educacional para:
+
+- Esclarecer dúvidas
+- Estruturar etapas
+- Revisar código
+- Entender boas práticas
+
+Todo o código foi escrito manualmente, entendendo cada parte da lógica. A IA foi usada como mentora de estudo, não como substituição do processo de desenvolvimento.
+
+Essa prática reflete o uso moderno e responsável de ferramentas tecnológicas no aprendizado profissional.
+
+## 🛠️ Stack Tecnológica
+
+- Python 3.10+
+- Flask
+- SQLAlchemy
+- MySQL
+- Thunder Client / Postman
+- Git & GitHub
+- VS Code
+
+## 👤 Autor
+
+**Vinicius Lima**
+
+Estudante de Desenvolvimento de Sistemas
+
+Poços de Caldas — MG
+
+Email: [vibylima75@gmail.com](mailto:vibylima75@gmail.com)
+
+LinkedIn: [Vinicius Lima](https://www.linkedin.com/in/vinicius-lima-b98100308/)
+
+GitHub: [Dinox75](https://github.com/Dinox75)
