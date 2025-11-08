@@ -1,9 +1,12 @@
 from flask import Flask, request
+from flask_cors import CORS
 from models import init_db, User, db, Cosmetico, Inventario
 from werkzeug.security import generate_password_hash
 from werkzeug.security import check_password_hash
+import requests
 
 app = Flask(__name__)
+CORS(app)
 init_db(app)
 
 @app.route("/")
@@ -149,6 +152,65 @@ def listar_inventario(usuario_id):
         })
     return {"usuario_id": usuario_id, "inventario": resultado}, 200
 
+@app.route("/sync/fortnite", methods=["GET"])
+def sync_fortnite():
+
+    url = "https://fortnite-api.com/v2/cosmetics/br"
+    response = requests.get(url)
+
+    if response.status_code != 200:
+        return {"error": "Falha ao acessar API Fortnite"}, 500
+
+    dados = response.json()
+
+    itens = dados.get("data", [])
+
+    for item in itens:
+        nome = item.get("name")
+        descricao_raw = item.get("description", "")
+        descricao = descricao_raw if isinstance(descricao_raw, str) else str(descricao_raw)
+
+        tipo_info = item.get("type", {})
+        tipo = tipo_info.get("value") if isinstance(tipo_info, dict) else tipo_info
+        if not isinstance(tipo, str):
+            tipo = str(tipo)
+
+        # Preço temporário (vamos melhorar depois)
+        preco = 500  
+
+        cosmetico_existente = Cosmetico.query.filter_by(nome=nome).first()
+
+        if cosmetico_existente:
+            cosmetico_existente.descricao = descricao
+            cosmetico_existente.tipo = tipo
+            cosmetico_existente.ativo = True
+            # futuramente atualizar preco real aqui
+        else:
+            novo_cosmetico = Cosmetico(
+                nome=nome,
+                descricao=descricao,
+                preco=preco,
+                tipo=tipo,
+                ativo=True
+            )
+            db.session.add(novo_cosmetico)
+
+    db.session.commit()
+
+    return {"message": "Sincronização concluída com sucesso!"}, 200
+
+@app.route("/usuarios", methods=["GET"])
+def listar_usuarios():
+    usuarios = User.query.all()
+    resultado = []
+    for usuario in usuarios:
+        resultado.append({
+            "id": usuario.id,
+            "nome": usuario.nome,
+            "email": usuario.email,
+            "creditos": usuario.creditos
+        })
+    return {"usuarios": resultado}, 200
 
 if __name__ == "__main__":
     app.run(debug=True)
