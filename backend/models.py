@@ -25,14 +25,18 @@ class Cosmetico(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     nome = db.Column(db.String(100), nullable=False)
-    descricao = db.Column(db.Text, nullable=True)
+    descricao = db.Column(db.Text(), nullable=True)
     preco = db.Column(db.Integer, nullable=False)
     tipo = db.Column(db.String(50), nullable=False) 
     ativo = db.Column(db.Boolean, default=True)
+    raridade = db.Column(db.String(50), nullable=True)
+    imagem_url = db.Column(db.String(255), nullable=True)
+    data_inclusao = db.Column(db.DateTime, default=db.func.current_timestamp())
     data_criado = db.Column(db.DateTime, default=db.func.current_timestamp())
 
+
 class Inventario(db.Model):
-    __tablename__ = 'inventario'  #Ligando com a tabela inventarios no banco de dados
+    __tablename__ = 'inventarios'  #Ligando com a tabela inventarios no banco de dados
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     usuario_id = db.Column(db.Integer, db.ForeignKey('usuarios.id'), nullable=False)
@@ -41,3 +45,16 @@ class Inventario(db.Model):
 
     usuario = db.relationship('User', backref=db.backref('inventario', lazy=True))
     cosmetico = db.relationship('Cosmetico', backref=db.backref('inventario', lazy=True))
+
+class Transacao(db.Model):
+    __tablename__ = 'transacoes'
+
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    usuario_id = db.Column(db.Integer, db.ForeignKey('usuarios.id'), nullable=False)
+    cosmetico_id = db.Column(db.Integer, db.ForeignKey('cosmeticos.id'), nullable=False)
+    tipo_operacao = db.Column(db.String(20), nullable=False)  # 'compra' ou 'devolucao'
+    valor = db.Column(db.Integer, nullable=False)
+    data_hora = db.Column(db.DateTime, default=db.func.current_timestamp())
+
+    usuario = db.relationship('User', backref=db.backref('transacoes', lazy=True))
+    cosmetico = db.relationship('Cosmetico', backref=db.backref('transacoes', lazy=True))

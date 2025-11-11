@@ -1,6 +1,6 @@
 🛍️ Sistema de Loja com Créditos — Desafio ESO
 
-Este projeto foi desenvolvido para o processo seletivo da ESO e simula um sistema de economia digital simples, onde:
+Este projeto foi desenvolvido para o processo seletivo da ESO e simula um sistema de economia digital inspirado em jogos, onde:
 
 Usuários podem se cadastrar e fazer login
 
@@ -35,7 +35,7 @@ Navegador moderno (Google Chrome ou Edge)
 git clone https://github.com/Dinox75/projeto-eso.git
 cd projeto-eso
 
-🏗️ 2) Criar e ativar ambiente virtual
+🏗️ 2) Criar e ativar o ambiente virtual
 python -m venv .venv
 
 
@@ -76,6 +76,8 @@ CREATE TABLE IF NOT EXISTS cosmeticos (
     descricao TEXT,
     preco INT NOT NULL,
     tipo VARCHAR(50) NOT NULL,
+    raridade VARCHAR(50),
+    imagem_url VARCHAR(255),
     ativo BOOLEAN DEFAULT TRUE,
     data_criado DATETIME DEFAULT CURRENT_TIMESTAMP
 );
@@ -89,115 +91,157 @@ CREATE TABLE IF NOT EXISTS inventarios (
     FOREIGN KEY (cosmetico_id) REFERENCES cosmeticos(id)
 );
 
-🔧 5) Configurar conexão MySQL
+CREATE TABLE IF NOT EXISTS transacoes (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    usuario_id INT NOT NULL,
+    cosmetico_id INT NOT NULL,
+    tipo_operacao VARCHAR(50) NOT NULL,
+    valor INT NOT NULL,
+    data_hora DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (usuario_id) REFERENCES usuarios(id),
+    FOREIGN KEY (cosmetico_id) REFERENCES cosmeticos(id)
+);
 
-No arquivo backend/models.py:
+🔧 5) Configurar a conexão MySQL
+
+No arquivo backend/models.py, ajuste:
 
 app.config['SQLALCHEMY_DATABASE_URI'] = "mysql+mysqlconnector://root:SUA_SENHA@localhost:3306/eso_projeto"
 
 
 Substitua SUA_SENHA pela sua senha do MySQL.
 
-▶️ 6) Executar a aplicação (backend)
+▶️ 6) Executar o backend
 cd backend
 python app.py
 
 
 A API estará disponível em:
-
-http://127.0.0.1:5000
+👉 http://127.0.0.1:5000
 
 🌐 7) Executar o frontend
 
-Abra o arquivo frontend/index.html no navegador
-ou use a extensão Live Server no VS Code para executar localmente.
+Abra o arquivo:
+
+frontend/index.html
+
+
+ou use a extensão Live Server do VS Code para rodar o projeto localmente.
 
 📡 API Endpoints
-Autenticação
+🧑‍💻 Autenticação
 Método	Endpoint	Descrição
 GET	/	Healthcheck
 POST	/register	Criar usuário
 POST	/login	Login
-Loja
+🛒 Loja
 Método	Endpoint	Descrição
 GET	/loja/listar	Listar itens disponíveis
 POST	/loja/comprar	Comprar item
 POST	/loja/devolver	Devolver item
 GET	/inventario/<id>	Ver inventário do usuário
-Integração Externa
+GET	/transacoes/<id>	Ver histórico de transações
+🎮 Integração Externa
 Método	Endpoint	Descrição
-GET	/sync/fortnite	Sincronizar itens da API do Fortnite
+GET	/sync/fortnite	Sincronizar itens da API Fortnite
 💻 Funcionalidades do Frontend
 🔐 Login (index.html)
 
 Faz login do usuário autenticado via API
 
-Salva sessão local (localStorage)
+Salva sessão local (LocalStorage)
 
 Redireciona para a loja
 
-🛒 Loja (shop.html)
+🛍️ Loja (shop.html)
 
-Lista todos os cosméticos disponíveis
+Lista todos os cosméticos sincronizados
 
-Permite comprar itens com créditos
+Exibe nome, descrição, preço, raridade e imagem
 
-Atualiza saldo em tempo real
+Permite comprar itens e atualiza créditos
 
-🎒 Inventário (inventory.html)
+🎒 Inventário (inventario.html)
 
-(Em desenvolvimento) Mostra os itens comprados
+Lista todos os itens comprados
 
-Permite devolver itens e recuperar créditos
+Mostra imagens, nomes e valores
+
+Exibe data da compra
+
+Em breve: devolver itens com reembolso automático
 
 📚 Sobre o Desenvolvimento e Aprendizado
 
-Este projeto representa uma etapa prática do meu aprendizado em desenvolvimento de sistemas.
-Antes dele, eu não tinha conhecimento sobre Flask, SQLAlchemy ou integração de APIs.
-Durante o processo, estudei, testei, errei, corrigi e evoluí a cada etapa — e o resultado é este sistema funcional.
+Este projeto representa uma etapa prática e de aprendizado real no meu desenvolvimento como programador.
 
-Mais do que apenas cumprir o desafio, o objetivo foi aprender construindo: entender a lógica, o fluxo entre backend e frontend, e como estruturar um projeto real com banco de dados e API.
+Antes dele, eu não possuía experiência com Flask, SQLAlchemy ou integração de APIs.
+Durante o processo, aprendi tudo na prática:
 
-Cada parte escrita reflete meu progresso, curiosidade e dedicação em aprender desenvolvimento web na prática.
+Entendi o fluxo entre backend e frontend
+
+Corrigi erros de integração com o banco
+
+Modelei entidades e rotas RESTful
+
+Implementei sincronização com uma API externa
+
+Cada commit foi uma evolução, e o resultado é um sistema funcional que une conceitos de backend, banco de dados e web.
 
 🤖 Uso do ChatGPT como Ferramenta Educacional
 
-Durante o desenvolvimento, utilizei o ChatGPT (OpenAI) como uma ferramenta de apoio ao aprendizado.
-A IA foi usada para:
+Durante o desenvolvimento, utilizei o ChatGPT (OpenAI) como ferramenta de aprendizado guiado —
+não para gerar o projeto pronto, mas para entender cada parte da construção.
 
-Explicar conceitos passo a passo (Flask, SQLAlchemy, rotas, etc.)
+O ChatGPT ajudou a:
 
-Me guiar na estrutura do código
+Explicar conceitos (Flask, SQLAlchemy, rotas, CORS, etc.)
 
-Ajudar a entender erros e boas práticas
+Orientar correções e boas práticas
 
-Reforçar meu aprendizado com exemplos e comparações
+Ajudar a estruturar o código de forma organizada
 
-Não foi uma substituição do meu esforço, mas um suporte didático, me ajudando a aprender e desenvolver um projeto funcional mesmo sem experiência prévia nessas tecnologias.
+Reforçar o raciocínio lógico de um projeto real
 
-Este projeto é, portanto, um marco no meu desenvolvimento — o início da minha jornada prática em desenvolvimento backend e integração de sistemas reais.
+Esse processo foi essencial para aprender de forma ativa, aplicando cada conceito na prática.
 
 🛠️ Stack Tecnológica
+
+Backend
 
 Python 3.10+
 
 Flask + SQLAlchemy
 
-MySQL / MySQL Workbench
+MySQL + Connector
 
-HTML5, CSS3, JavaScript (Fetch API)
+Flask-CORS
 
-Thunder Client / Postman
+Requests (API Fortnite)
+
+Frontend
+
+HTML5, CSS3, Bootstrap
+
+JavaScript (Fetch API)
+
+LocalStorage
+
+Ferramentas
+
+VS Code
 
 Git & GitHub
 
-VS Code
+MySQL Workbench
+
+Thunder Client / Postman
 
 👤 Autor
 
 Vinicius Lima
 Estudante de Desenvolvimento de Sistemas
-Poços de Caldas — MG
+📍 Poços de Caldas — MG
 
 📧 vibylima75@gmail.com
 
@@ -208,6 +252,6 @@ Poços de Caldas — MG
 🏁 Status do Projeto
 
 ✅ Backend completo
-✅ Frontend funcional (Login + Loja)
-🟡 Inventário visual (em desenvolvimento)
+✅ Frontend funcional (Login + Loja + Inventário com imagens)
+✅ Integração com API Fortnite
 🚀 Sistema 100% funcional via API REST + MySQL

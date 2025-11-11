@@ -6,9 +6,8 @@ async function carregarLoja() {
         const resposta = await fetch("http://127.0.0.1:5000/loja/listar");
         const data = await resposta.json();
 
-        lojaDiv.innerHTML = ''; // Limpa o conteúdo existente antes de atualizar
+        lojaDiv.innerHTML = '';
 
-        // 🔧 Corrigido: data.itens (antes estava data.item)
         data.itens.forEach(item => {
             const card = document.createElement('div');
             card.className = "card bg-secondary text-white p-2 m-2";
@@ -16,9 +15,14 @@ async function carregarLoja() {
 
             card.innerHTML = `
                 <div class="card-body text-center">
+                    <img src="${item.imagem_url || 'https://via.placeholder.com/150'}"
+                        alt="${item.nome}"
+                        class="img-fluid rounded mb-2"
+                        style="max-height: 120px; object-fit: contain;">
                     <h6 class="card-title">${item.nome}</h6>
                     <p class="small">${item.descricao || "Sem descrição"}</p>
                     <p><strong>${item.preco} créditos</strong></p>
+                    <p><em>${item.raridade || "Comum"}</em></p>
                     <button class="btn btn-warning btn-sm" onclick="comprarItem(${item.id})">Comprar</button>
                 </div>
             `;
@@ -32,8 +36,23 @@ async function carregarLoja() {
     }
 }
 
-// Chama a função assim que a página carrega
 carregarLoja();
+
+document.getElementById('filtro').addEventListener('input', function () {
+    const termo = this.value.toLowerCase();
+    const cards = document.querySelectorAll('#loja .card');
+
+    cards.forEach(card => {
+        const nome = card.querySelector('.card-title').textContent.toLowerCase();
+        const tipo = card.querySelector('em').textContent.toLowerCase();
+
+        if (nome.includes(termo) || tipo.includes(termo)) {
+            card.style.display = '';
+        } else {
+            card.style.display = 'none';
+        }
+    });
+});
 
 async function comprarItem(cosmetico_id) {  
     const email = localStorage.getItem('user_email');
@@ -45,11 +64,8 @@ async function comprarItem(cosmetico_id) {
     }
 
     try {
-        // Buscar ID real do usuário via backend
         const respostaUsuario = await fetch("http://127.0.0.1:5000/usuarios");
         const dataUsuarios = await respostaUsuario.json();
-
-        // Garante que acessamos o array interno "usuarios"
         const listaUsuarios = dataUsuarios.usuarios || [];
         const usuario = listaUsuarios.find(u => u.email === email);
 
@@ -58,14 +74,10 @@ async function comprarItem(cosmetico_id) {
             return;
         }
 
-        //  Nomes exatos esperados pelo Flask
         const compra = {
             usuario_id: usuario.id,
             cosmetico_id: cosmetico_id
         };
-
-        //  Adicionado log para debug
-        console.log("Enviando compra:", compra);
 
         const resposta = await fetch("http://127.0.0.1:5000/loja/comprar", {
             method: "POST",
@@ -76,7 +88,6 @@ async function comprarItem(cosmetico_id) {
         const data = await resposta.json();
 
         if (resposta.ok) {
-            //  Mostra créditos restantes
             msg.innerHTML = `✅ Compra realizada com sucesso!<br>💰 Créditos restantes: ${data.creditos_restantes}`;
             msg.classList.remove('text-danger');
             msg.classList.add('text-success');
@@ -98,6 +109,7 @@ document.getElementById("btnSair").addEventListener("click", () => {
 });
 
 document.getElementById("btnInventario").addEventListener("click", () => {
-    window.location.href = "inventory.html";
+    window.location.href = "inventario.html"; 
 });
+
 window.comprarItem = comprarItem;
