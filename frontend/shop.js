@@ -1,6 +1,21 @@
 const lojaDiv = document.getElementById('loja');
 const msg = document.getElementById('msg');
 
+const email = localStorage.getItem('user_email');
+const estaLogado = !!email;
+
+if (!estaLogado) {
+    document.getElementById("btnInventario").style.display = "none";
+    document.getElementById("btnSair").style.display = "none";
+    document.getElementById("btnLogin").style.display = "inline-block";
+} else {
+    document.getElementById("btnLogin").style.display = "none";
+}
+
+document.getElementById("btnLogin").addEventListener("click", () => {
+    window.location.href = "index.html";
+});
+
 async function carregarLoja() {
     try {
         const resposta = await fetch("http://127.0.0.1:5000/loja/listar");
@@ -46,60 +61,47 @@ document.getElementById('filtro').addEventListener('input', function () {
         const nome = card.querySelector('.card-title').textContent.toLowerCase();
         const tipo = card.querySelector('em').textContent.toLowerCase();
 
-        if (nome.includes(termo) || tipo.includes(termo)) {
-            card.style.display = '';
-        } else {
-            card.style.display = 'none';
-        }
+        card.style.display = (nome.includes(termo) || tipo.includes(termo)) ? '' : 'none';
     });
 });
 
 async function comprarItem(cosmetico_id) {  
-    const email = localStorage.getItem('user_email');
-
-    if (!email) {
-        alert("Faça login novamente.");
+    if (!estaLogado) {
+        alert("É necessário fazer login para comprar itens.");
         window.location.href = "index.html";
         return;
     }
 
-    try {
-        const respostaUsuario = await fetch("http://127.0.0.1:5000/usuarios");
-        const dataUsuarios = await respostaUsuario.json();
-        const listaUsuarios = dataUsuarios.usuarios || [];
-        const usuario = listaUsuarios.find(u => u.email === email);
+    const respostaUsuario = await fetch("http://127.0.0.1:5000/usuarios");
+    const dataUsuarios = await respostaUsuario.json();
+    const listaUsuarios = dataUsuarios.usuarios || [];
+    const usuario = listaUsuarios.find(u => u.email === email);
 
-        if (!usuario) {
-            alert("Usuário não encontrado. Faça login novamente.");
-            return;
-        }
+    if (!usuario) {
+        alert("Usuário não encontrado. Faça login novamente.");
+        return;
+    }
 
-        const compra = {
-            usuario_id: usuario.id,
-            cosmetico_id: cosmetico_id
-        };
+    const compra = {
+        usuario_id: usuario.id,
+        cosmetico_id: cosmetico_id
+    };
 
-        const resposta = await fetch("http://127.0.0.1:5000/loja/comprar", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(compra)
-        });
+    const resposta = await fetch("http://127.0.0.1:5000/loja/comprar", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(compra)
+    });
 
-        const data = await resposta.json();
+    const data = await resposta.json();
 
-        if (resposta.ok) {
-            msg.innerHTML = `✅ Compra realizada com sucesso!<br>💰 Créditos restantes: ${data.creditos_restantes}`;
-            msg.classList.remove('text-danger');
-            msg.classList.add('text-success');
-        } else {
-            msg.textContent = data.error || "Erro ao realizar a compra.";
-            msg.classList.add('text-danger');
-        }
-
-    } catch (error) {
-        msg.textContent = "Erro de conexão com o servidor.";
+    if (resposta.ok) {
+        msg.innerHTML = `Compra realizada com sucesso!<br>Créditos restantes: ${data.creditos_restantes}`;
+        msg.classList.remove('text-danger');
+        msg.classList.add('text-success');
+    } else {
+        msg.textContent = data.error || "Erro ao realizar a compra.";
         msg.classList.add('text-danger');
-        console.error("Erro de conexão:", error);
     }
 }
 
@@ -110,6 +112,10 @@ document.getElementById("btnSair").addEventListener("click", () => {
 
 document.getElementById("btnInventario").addEventListener("click", () => {
     window.location.href = "inventario.html"; 
+});
+
+document.getElementById("btnHistorico").addEventListener("click", () => {
+    window.location.href = "historico.html";
 });
 
 window.comprarItem = comprarItem;
