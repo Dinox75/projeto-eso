@@ -1,4 +1,5 @@
-🛍️ Sistema de Loja com Créditos — Desafio ESO
+istema de Loja com Créditos — Desafio ESO
+
 Projeto desenvolvido por Vinicius Lima com apoio direto da IA ChatGPT (OpenAI)
 
 Este projeto foi criado para o processo seletivo da ESO e simula um sistema completo de loja digital inspirado em jogos como Fortnite.
@@ -19,15 +20,15 @@ Créditos iniciais automáticos
 
 Listagem de todos os cosméticos disponíveis
 
-Integração completa com API pública do Fortnite
+Integração com API pública do Fortnite
 
 Atualização automática do estoque
 
 Compra de itens usando créditos
 
-Reembolso via devolução (refund)
+Reembolso via devolução
 
-Histórico de transações completo
+Histórico completo de transações
 
 🎒 Inventário do Jogador
 
@@ -35,23 +36,21 @@ Visualização de todos os itens adquiridos
 
 Exibição de imagens, nomes, raridades e datas
 
-Código preparado para devolução dos itens
+Sistema preparado para devoluções
 
-📄 Geração de Histórico em PDF 
+📄 Geração de Histórico
 
-O usuário pode baixar um relatório em PDF
+Inclui compras, devoluções e detalhes de inventário
 
-Inclui todas as compras, devoluções e detalhes do inventário
-
-🎨 Frontend Modernizado 
+🎨 Frontend Modernizado
 
 Tema neon roxo inspirado no Fortnite
 
 Background estilizado sem arquivos externos
 
-Efeitos e UI melhorada
+UI organizada e responsiva
 
-Três telas principais:
+Telas principais:
 
 index.html (login)
 
@@ -61,53 +60,54 @@ shop.html (loja)
 
 inventario.html (inventário)
 
-🤖 Desenvolvimento com IA – Sem Amenizar
+🤖 Desenvolvimento com IA – Transparência Total
+
 Este projeto foi desenvolvido em parceria direta com a IA ChatGPT (OpenAI).
 
-Durante todo o processo, utilizei a IA como:
+A IA foi utilizada como:
 
 Guia de aprendizado
 
-Explicação de conceitos do zero
+Explicadora de conceitos
 
-Ajudante para estruturar rotas, modelos e banco
+Assistente de organização do backend
 
-Suporte técnico para resolver erros reais
+Suporte para correção de erros reais
 
-Auxílio para organizar o frontend e melhorar a experiência do usuário
+Consultora para boas práticas
 
-Consultor para aplicar boas práticas
+Auxílio no frontend e integração
 
-Não foi apenas inspiração — foi desenvolvimento lado a lado.
-A IA participou diretamente da construção do projeto, sempre com foco educacional e com explicações detalhadas para que eu entendesse cada etapa.
+Não foi apenas inspiração — foi desenvolvimento lado a lado, com o objetivo de aprender tecnologias reais e entender cada etapa com clareza.
 
-Quero deixar isso totalmente claro e transparente, pois este projeto representa meu aprendizado real com apoio de tecnologia moderna.
+Sou totalmente transparente sobre isso:
+Este projeto representa meu aprendizado real, apoiado por tecnologia moderna.
 
 🧠 Aprendizado Adquirido
 
 Durante o desenvolvimento, aprendi:
 
-Como funciona o Flask na prática
+Estruturação completa de backend Flask
 
-Como estruturar um backend completo
+Modelagem de banco relacional (MySQL)
 
-Como modelar banco de dados relacional
+Autenticação e sessões simplificadas
 
-JWT / sessões simplificadas
+Consumir APIs externas (Fortnite API)
 
-Comunicação REST com Fetch API
+Comunicação REST usando Fetch API
 
-Como consumir APIs externas
+Integração frontend + backend
 
-Como integrar frontend + backend corretamente
+Geração de PDFs no backend
 
-Como gerar PDFs no backend
+UI moderna e responsiva no frontend
 
-Como criar interfaces modernas no frontend
+Debugging de erros reais
 
-Como trabalhar com erros reais e debug
+Deploy (Vercel + Render + Railway)
 
-Foi minha primeira experiência full stack real.
+Foi minha primeira experiência full stack completa.
 
 🛠️ Tecnologias Utilizadas
 Backend
@@ -138,7 +138,7 @@ JavaScript (Fetch API)
 
 LocalStorage
 
-Tema neon roxo inspirado no Fortnite
+Tema neon inspirado no Fortnite
 
 Ferramentas
 
@@ -148,9 +148,28 @@ Git & GitHub
 
 MySQL Workbench
 
-Thunder Client / Postman
+Thunder Client
 
-🚀 Como Rodar o Projeto
+🌐 Deploy do Projeto (Atualizado)
+
+O sistema completo está rodando online:
+
+Frontend (Vercel)
+
+🔗 https://projeto-eso-weld.vercel.app/
+
+Backend (Render)
+
+🔗 https://projeto-eso-1.onrender.com/
+
+Banco de Dados (Railway — MySQL)
+
+Banco remoto com tabelas:
+usuarios, cosmeticos, inventarios, transacoes
+
+Toda a integração entre frontend, backend e banco já está configurada para produção.
+
+🚀 Como Rodar o Projeto Localmente
 1) Clonar o repositório
 git clone https://github.com/Dinox75/projeto-eso.git
 cd projeto-eso
@@ -158,20 +177,19 @@ cd projeto-eso
 2) Criar ambiente virtual
 python -m venv .venv
 
-Ativar ambiente
 
-PowerShell:
+Ativar (PowerShell):
 
 .\.venv\Scripts\Activate.ps1
 
 3) Instalar dependências
 pip install -r backend/requirements.txt
 
-4) Configurar MySQL
+4) Configurar MySQL local
 
-Crie o banco e as tabelas (já incluídas no README original).
+Crie o banco e as tabelas (conforme README original).
 
-5) Ajustar a conexão em models.py
+5) Ajustar conexão no models.py
 app.config['SQLALCHEMY_DATABASE_URI'] = "mysql+mysqlconnector://root:SUA_SENHA@localhost:3306/eso_projeto"
 
 6) Rodar o backend
@@ -179,27 +197,31 @@ cd backend
 python app.py
 
 
-API disponível em:
+API local disponível em:
+
 http://127.0.0.1:5000
 
 7) Rodar o frontend
 
-Abra frontend/index.html
+Abra manualmente:
+
+frontend/index.html
 
 🌐 Endpoints Principais
 
-(sem alterações — conforme README original)
+(mantidos exatamente como no README original)
 
-# 👤 Autor
+👤 Autor
 
-**Vinicius Lima**  
-Estudante de Desenvolvimento de Sistemas  
-📍 Poços de Caldas — MG  
+Vinicius Lima
+Estudante de Desenvolvimento de Sistemas
+📍 Poços de Caldas — MG
 
-📧 vibylima75@gmail.com  
+📧 vibylima75@gmail.com
 
-🔗 [LinkedIn](https://www.linkedin.com/in/vinicius-lima-b98100308/)  
-💻 [GitHub](https://github.com/Dinox75)
+🔗 https://www.linkedin.com/in/vinicius-lima-b98100308/
+
+💻 https://github.com/Dinox75
 
 🏁 Status do Projeto
 Item	Status
@@ -209,4 +231,3 @@ API Fortnite	✔ Sincronização ativa
 Visual Fortnite Neon	✔ Finalizado
 PDF com histórico	✔ Implementado
 Sistema REST + MySQL	✔ Totalmente funcional
-
