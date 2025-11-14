@@ -18,7 +18,7 @@ document.getElementById("btnLogin").addEventListener("click", () => {
 
 async function carregarLoja() {
     try {
-        const resposta = await fetch("http://127.0.0.1:5000/loja/listar");
+        const resposta = await fetch("https://projeto-eso-1.onrender.com/loja/listar");
         const data = await resposta.json();
 
         lojaDiv.innerHTML = '';
@@ -72,7 +72,7 @@ async function comprarItem(cosmetico_id) {
         return;
     }
 
-    const respostaUsuario = await fetch("http://127.0.0.1:5000/usuarios");
+    const respostaUsuario = await fetch("https://projeto-eso-1.onrender.com/usuarios");
     const dataUsuarios = await respostaUsuario.json();
     const listaUsuarios = dataUsuarios.usuarios || [];
     const usuario = listaUsuarios.find(u => u.email === email);
@@ -87,7 +87,7 @@ async function comprarItem(cosmetico_id) {
         cosmetico_id: cosmetico_id
     };
 
-    const resposta = await fetch("http://127.0.0.1:5000/loja/comprar", {
+    const resposta = await fetch("https://projeto-eso-1.onrender.com/loja/comprar", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(compra)

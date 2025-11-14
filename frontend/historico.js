@@ -9,7 +9,7 @@ async function carregarHistorico() {
     }
 
     try {
-        const respostaUsuarios = await fetch("http://127.0.0.1:5000/usuarios");
+        const respostaUsuarios = await fetch("https://projeto-eso-1.onrender.com/usuarios");
         const dataUsuarios = await respostaUsuarios.json();
         const usuarios = dataUsuarios.usuarios || [];
 
@@ -20,7 +20,7 @@ async function carregarHistorico() {
             return;
         }
 
-        const resposta = await fetch(`http://127.0.0.1:5000/transacoes/${usuario.id}`);
+        const resposta = await fetch(`https://projeto-eso-1.onrender.com/transacoes/${usuario.id}`);
         const data = await resposta.json();
 
         if (!data.transacoes || data.transacoes.length === 0) {

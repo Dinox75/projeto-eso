@@ -11,7 +11,7 @@ async function carregarInventario() {
     }
 
     try {
-        const respostaUsuarios = await fetch("http://127.0.0.1:5000/usuarios");
+        const respostaUsuarios = await fetch("https://projeto-eso-1.onrender.com/usuarios");
         const dataUsuarios = await respostaUsuarios.json();
         const listaUsuarios = dataUsuarios.usuarios || [];
 
@@ -21,7 +21,7 @@ async function carregarInventario() {
             return;
         }
 
-        const resposta = await fetch(`http://127.0.0.1:5000/inventario/${usuario.id}`);
+        const resposta = await fetch(`https://projeto-eso-1.onrender.com/inventario/${usuario.id}`);
         const data = await resposta.json();
 
         inventarioDiv.innerHTML = '';
@@ -68,7 +68,7 @@ async function devolverItem(cosmetico_id) {
     }
 
     try {
-        const respostaUsuarios = await fetch("http://127.0.0.1:5000/usuarios");
+        const respostaUsuarios = await fetch("https://projeto-eso-1.onrender.com/usuarios");
         const dataUsuarios = await respostaUsuarios.json();
         const listaUsuarios = dataUsuarios.usuarios || [];
 
@@ -83,7 +83,7 @@ async function devolverItem(cosmetico_id) {
             cosmetico_id: cosmetico_id
         };
 
-        const resposta = await fetch("http://127.0.0.1:5000/loja/devolver", {
+        const resposta = await fetch("https://projeto-eso-1.onrender.com/loja/devolver", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(devolucao)
