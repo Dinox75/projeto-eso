@@ -284,6 +284,13 @@ def listar_usuarios():
         })
     return {"usuarios": resultado}, 200
 
+@app.route("/initdb")
+def initdb():
+    from models import db
+    db.create_all()
+    return "Banco criado!"
+
+
 # ---------------------- MAIN ----------------------
 
 if __name__ == "__main__":
