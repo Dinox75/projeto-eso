@@ -5,7 +5,7 @@ db = SQLAlchemy()
 
 def init_db(app):
     '''Inicializa a conexão com o banco MySQL'''
-    app.config['SQLALCHEMY_DATABASE_URI'] = ('mysql+mysqlconnector://freedb_vinicius_user:7Tr7w458%2AB%26tDPe@sql.freedb.tech:3306/freedb_eso_projeto')
+    app.config['SQLALCHEMY_DATABASE_URI'] = ('mysql://root:iJhTCDjGMLbRFwuuKJdQEROEJvzLllIV@caboose.proxy.rlwy.net:11698/railway')
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     db.init_app(app)
 
