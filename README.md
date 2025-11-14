@@ -210,4 +210,3 @@ Visual Fortnite Neon	✔ Finalizado
 PDF com histórico	✔ Implementado
 Sistema REST + MySQL	✔ Totalmente funcional
 
-[def🔗 [LinkedIn](https://www.linkedin.com/in/vinicius-lima-b98100308/)]: https://www.linkedin.com/in/vinicius-lima-b98100308/
