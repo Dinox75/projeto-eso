@@ -1,24 +1,45 @@
 const lojaDiv = document.getElementById('loja');
 const msg = document.getElementById('msg');
 
+const API_URL = "https://projeto-eso-1.onrender.com";
+
 const email = localStorage.getItem('user_email');
 const estaLogado = !!email;
 
+// ---------------------- CONTROLE DE BOTÕES ----------------------
 if (!estaLogado) {
     document.getElementById("btnInventario").style.display = "none";
     document.getElementById("btnSair").style.display = "none";
+    document.getElementById("btnHistorico").style.display = "none";
     document.getElementById("btnLogin").style.display = "inline-block";
 } else {
     document.getElementById("btnLogin").style.display = "none";
 }
 
-document.getElementById("btnLogin").addEventListener("click", () => {
-    window.location.href = "index.html";
-});
+// ---------------------- PEGAR USUÁRIO PELO EMAIL ----------------------
+async function carregarUsuario() {
+    if (!email) return null;
 
+    const resp = await fetch(`${API_URL}/usuarios/email/${email}`);
+    const data = await resp.json();
+
+    if (resp.ok) {
+        // Salva o ID do usuário para compras e inventário
+        localStorage.setItem("user_id", data.id);
+
+        // Atualiza créditos na tela
+        document.getElementById("creditos-valor").textContent = data.creditos;
+
+        return data;
+    }
+
+    return null;
+}
+
+// ---------------------- CARREGAR LOJA ----------------------
 async function carregarLoja() {
     try {
-        const resposta = await fetch("https://projeto-eso-1.onrender.com/loja/listar");
+        const resposta = await fetch(`${API_URL}/loja/listar`);
         const data = await resposta.json();
 
         lojaDiv.innerHTML = '';
@@ -41,6 +62,7 @@ async function carregarLoja() {
                     <button class="btn btn-warning btn-sm" onclick="comprarItem(${item.id})">Comprar</button>
                 </div>
             `;
+
             lojaDiv.appendChild(card);
         });
 
@@ -51,8 +73,7 @@ async function carregarLoja() {
     }
 }
 
-carregarLoja();
-
+// ---------------------- FILTRO ----------------------
 document.getElementById('filtro').addEventListener('input', function () {
     const termo = this.value.toLowerCase();
     const cards = document.querySelectorAll('#loja .card');
@@ -65,6 +86,7 @@ document.getElementById('filtro').addEventListener('input', function () {
     });
 });
 
+// ---------------------- COMPRAR ITEM ----------------------
 async function comprarItem(cosmetico_id) {  
     if (!estaLogado) {
         alert("É necessário fazer login para comprar itens.");
@@ -72,22 +94,20 @@ async function comprarItem(cosmetico_id) {
         return;
     }
 
-    const respostaUsuario = await fetch("https://projeto-eso-1.onrender.com/usuarios");
-    const dataUsuarios = await respostaUsuario.json();
-    const listaUsuarios = dataUsuarios.usuarios || [];
-    const usuario = listaUsuarios.find(u => u.email === email);
+    const usuario_id = localStorage.getItem("user_id");
 
-    if (!usuario) {
-        alert("Usuário não encontrado. Faça login novamente.");
+    if (!usuario_id) {
+        alert("Erro ao identificar usuário. Faça login novamente.");
+        window.location.href = "index.html";
         return;
     }
 
     const compra = {
-        usuario_id: usuario.id,
+        usuario_id: Number(usuario_id),
         cosmetico_id: cosmetico_id
     };
 
-    const resposta = await fetch("https://projeto-eso-1.onrender.com/loja/comprar", {
+    const resposta = await fetch(`${API_URL}/loja/comprar`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(compra)
@@ -99,11 +119,20 @@ async function comprarItem(cosmetico_id) {
         msg.innerHTML = `Compra realizada com sucesso!<br>Créditos restantes: ${data.creditos_restantes}`;
         msg.classList.remove('text-danger');
         msg.classList.add('text-success');
+
+        // Atualiza créditos no topo
+        document.getElementById("creditos-valor").textContent = data.creditos_restantes;
+
     } else {
         msg.textContent = data.error || "Erro ao realizar a compra.";
         msg.classList.add('text-danger');
     }
 }
+
+// ---------------------- BOTÕES ----------------------
+document.getElementById("btnLogin").addEventListener("click", () => {
+    window.location.href = "index.html";
+});
 
 document.getElementById("btnSair").addEventListener("click", () => {
     localStorage.clear();
@@ -117,5 +146,11 @@ document.getElementById("btnInventario").addEventListener("click", () => {
 document.getElementById("btnHistorico").addEventListener("click", () => {
     window.location.href = "historico.html";
 });
+
+// ---------------------- INICIALIZAÇÃO ----------------------
+window.onload = async () => {
+    await carregarUsuario();   
+    await carregarLoja();
+};
 
 window.comprarItem = comprarItem;

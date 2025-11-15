@@ -270,6 +270,23 @@ def sync_fortnite():
 
 
 # ---------------------- USUÁRIOS ----------------------
+@app.route("/usuarios/email/<email>", methods=["GET"])
+def buscar_usuario_por_email(email):
+    usuario = User.query.filter_by(email=email).first()
+
+    if not usuario:
+        return {"error": "Usuário não encontrado."}, 404
+
+    return {
+        "id": usuario.id,
+        "nome": usuario.nome,
+        "email": usuario.email,
+        "creditos": usuario.creditos,
+        "avatar_url": usuario.avatar_url,
+        "data_cadastro": usuario.data_cadastro.strftime("%d/%m/%Y %H:%M")
+    }, 200
+
+
 
 @app.route("/usuarios", methods=["GET"])
 def listar_usuarios():
