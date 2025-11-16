@@ -1,4 +1,4 @@
-istema de Loja com Créditos — Desafio ESO
+Sistema de Loja com Créditos — Desafio ESO
 
 Projeto desenvolvido por Vinicius Lima com apoio direto da IA ChatGPT (OpenAI)
 
